@@ -116,7 +116,6 @@ class Shape(object):
         size = 14
         font = QFont()
         font.setPointSize(size)
-        font.setBold(True)
         painter.setFont(font)
         painter.setPen(QPen(QColor(255, 255, 0)))
         painter.drawText(int((self.points[2].x() + self.points[0].x() - size * 4) / 2), int((self.points[3].y() + self.points[1].y() + size) / 2), str(int(abs(self.points[2].x() - self.points[0].x()))) + ', ' + str(int(abs(self.points[3].y() - self.points[1].y()))))
