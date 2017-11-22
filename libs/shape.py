@@ -107,18 +107,19 @@ class Shape(object):
             painter.drawPath(line_path)
             painter.drawPath(vrtx_path)
             painter.fillPath(vrtx_path, self.vertex_fill_color)
-            self.drawSize(painter)
             if self.fill:
                 color = self.select_fill_color if self.selected else self.fill_color
                 painter.fillPath(line_path, color)
+            self.drawSize(painter)
 
     def drawSize(self, painter):
-        size = 14
-        font = QFont()
-        font.setPointSize(size)
-        painter.setFont(font)
-        painter.setPen(QPen(QColor(255, 255, 0)))
-        painter.drawText(int((self.points[2].x() + self.points[0].x() - size * 4) / 2), int((self.points[3].y() + self.points[1].y() + size) / 2), str(int(abs(self.points[2].x() - self.points[0].x()))) + ', ' + str(int(abs(self.points[3].y() - self.points[1].y()))))
+        if len(self.points) == 4:
+            size = 14
+            font = QFont()
+            font.setPointSize(size)
+            painter.setFont(font)
+            painter.setPen(QPen(QColor(255, 255, 0)))
+            painter.drawText(int((self.points[2].x() + self.points[0].x() - size * 4) / 2), int((self.points[3].y() + self.points[1].y() + size) / 2), str(int(abs(self.points[2].x() - self.points[0].x()))) + ', ' + str(int(abs(self.points[3].y() - self.points[1].y()))))
 
     def drawVertex(self, path, i):
         d = self.point_size / self.scale
