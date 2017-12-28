@@ -1,5 +1,4 @@
-dog
-person
-cat
-tv
 car
+bus
+pedestrain
+cyclist
