@@ -1302,14 +1302,29 @@ class MainWindow(QMainWindow, WindowMixin):
 
     def loadPascalXMLByFilename(self, xmlPath):
         if self.filePath is None:
+            #remove later
+            pal = self.palette()
+            pal.setColor(self.backgroundRole(), QColor(232, 232, 232, 255))
+            self.setPalette(pal)
+            ###
             return
         if os.path.isfile(xmlPath) is False:
+            #remove later
+            pal = self.palette()
+            pal.setColor(self.backgroundRole(), QColor(232, 232, 232, 255))
+            self.setPalette(pal)
+            ###
             return
 
         tVocParseReader = PascalVocReader(xmlPath)
         shapes = tVocParseReader.getShapes()
         self.loadLabels(shapes)
         self.canvas.verified = tVocParseReader.verified
+        #remove later
+        pal = self.palette()
+        pal.setColor(self.backgroundRole(), QColor(184, 239, 38, 128))
+        self.setPalette(pal)
+        ###
 
 
 def inverted(color):
