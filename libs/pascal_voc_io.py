@@ -11,13 +11,13 @@ ENCODE_METHOD = 'utf-8'
 
 class PascalVocWriter:
 
-    def __init__(self, foldername, filename, imgSize,databaseSrc='Unknown', localImgPath=None):
-        self.foldername = foldername
+    def __init__(self, filename, imgSize):#,databaseSrc='Unknown'):#, localImgPath=None):
+        # self.foldername = foldername
         self.filename = filename
-        self.databaseSrc = databaseSrc
+        # self.databaseSrc = databaseSrc
         self.imgSize = imgSize
         self.boxlist = []
-        self.localImgPath = localImgPath
+        # self.localImgPath = localImgPath
         self.verified = False
 
     def prettify(self, elem):
@@ -36,28 +36,28 @@ class PascalVocWriter:
             Return XML root
         """
         # Check conditions
-        if self.filename is None or \
-                self.foldername is None or \
-                self.imgSize is None:
+        if self.filename is None or self.imgSize is None:
+                # self.foldername is None or \
+
             return None
 
         top = Element('annotation')
         if self.verified:
             top.set('verified', 'yes')
 
-        folder = SubElement(top, 'folder')
-        folder.text = self.foldername
+        # folder = SubElement(top, 'folder')
+        # folder.text = self.foldername
 
         filename = SubElement(top, 'filename')
         filename.text = self.filename
 
-        if self.localImgPath is not None:
-            localImgPath = SubElement(top, 'path')
-            localImgPath.text = self.localImgPath
+        # if self.localImgPath is not None:
+        #     localImgPath = SubElement(top, 'path')
+        #     localImgPath.text = self.localImgPath
 
-        source = SubElement(top, 'source')
-        database = SubElement(source, 'database')
-        database.text = self.databaseSrc
+        # source = SubElement(top, 'source')
+        # database = SubElement(source, 'database')
+        # database.text = self.databaseSrc
 
         size_part = SubElement(top, 'size')
         width = SubElement(size_part, 'width')
@@ -70,8 +70,8 @@ class PascalVocWriter:
         else:
             depth.text = '1'
 
-        segmented = SubElement(top, 'segmented')
-        segmented.text = '0'
+        # segmented = SubElement(top, 'segmented')
+        # segmented.text = '0'
         return top
 
     def addBndBox(self, xmin, ymin, xmax, ymax, name, difficult):
@@ -89,8 +89,8 @@ class PascalVocWriter:
             except NameError:
                 # Py3: NameError: name 'unicode' is not defined
                 name.text = each_object['name']
-            pose = SubElement(object_item, 'pose')
-            pose.text = "Unspecified"
+            # pose = SubElement(object_item, 'pose')
+            # pose.text = "Unspecified"
             truncated = SubElement(object_item, 'truncated')
             if int(each_object['ymax']) == int(self.imgSize[0]) or (int(each_object['ymin'])== 1):
                 truncated.text = "1" # max == height or min
