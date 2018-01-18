@@ -37,4 +37,4 @@ if __name__ == '__main__':
         if files.endswith('.txt'):
             shapes = shapes_creator(read_file_to_array(testing_bbox + files), thresh)
             LabelFile().savePascalVocFormat('labels_test/' + str(files)[:-4] + '.xml', shapes, image_folder + str(files[:-4]) + '.png', None)
-            print str(str(files[:-4]) + '.xml has been processed')
+            print(str(str(files[:-4]) + '.xml has been processed'))
