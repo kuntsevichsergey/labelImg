@@ -630,6 +630,7 @@ class MainWindow(QMainWindow, WindowMixin):
         if not self.canvas.editing():
             return
 
+        # maybe has relation to https://github.com/kuntsevichsergey/labelImg/issues/10
         item = self.currentItem()
         if not item: # If not selected Item, take the first one
             item = self.labelList.item(self.labelList.count()-1)
@@ -657,6 +658,7 @@ class MainWindow(QMainWindow, WindowMixin):
         if not self.canvas.editing():
             return
 
+	# maybe has relation to https://github.com/kuntsevichsergey/labelImg/issues/10
         item = self.currentItem()
         if not item:  # If not selected Item, take the first one
             item = self.labelList.item(self.labelList.count() - 1)

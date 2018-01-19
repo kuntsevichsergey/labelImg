@@ -94,12 +94,6 @@ class PascalVocWriter:
             pose.text = "Unspecified"
             truncated = SubElement(object_item, 'truncated')
             truncated.text = str(bool(each_object['truncated']) & 1)
-            # if int(each_object['ymax']) == int(self.imgSize[0]) or (int(each_object['ymin'])== 1):
-            #     truncated.text = "1" # max == height or min
-            # elif (int(each_object['xmax'])==int(self.imgSize[1])) or (int(each_object['xmin'])== 1):
-            #     truncated.text = "1" # max == width or min
-            # else:
-            #     truncated.text = "0"
             difficult = SubElement(object_item, 'difficult')
             difficult.text = str( bool(each_object['difficult']) & 1 )
             bndbox = SubElement(object_item, 'bndbox')
