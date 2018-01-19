@@ -136,14 +136,18 @@ class MainWindow(QMainWindow, WindowMixin):
 
         # Create a widget for edit and diffc button
         self.diffcButton = QCheckBox(u'difficult')
+        self.truncButton = QCheckBox(u'truncated')
         self.diffcButton.setChecked(False)
+        self.truncButton.setChecked(False)
         self.diffcButton.stateChanged.connect(self.btnstate)
+        self.truncButton.stateChanged.connect(self.btnstate_trunc)
         self.editButton = QToolButton()
         self.editButton.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
 
         # Add some of widgets to listLayout
         listLayout.addWidget(self.editButton)
         listLayout.addWidget(self.diffcButton)
+        listLayout.addWidget(self.truncButton)
         listLayout.addWidget(useDefaultLabelContainer)
 
         # Create and add a widget for showing current label items
@@ -404,6 +408,7 @@ class MainWindow(QMainWindow, WindowMixin):
         self.fit_window = False
         # Add Chris
         self.difficult = False
+        self.truncated = False
 
         ## Fix the compatible issue for qt4 and qt5. Convert the QStringList to python list
         if settings.get(SETTING_RECENT_FILES):
@@ -431,6 +436,7 @@ class MainWindow(QMainWindow, WindowMixin):
         self.canvas.setDrawingColor(self.lineColor)
         # Add chris
         Shape.difficult = self.difficult
+        Shape.truncated = self.truncated
 
         def xbool(x):
             if isinstance(x, QVariant):
@@ -624,6 +630,7 @@ class MainWindow(QMainWindow, WindowMixin):
         if not self.canvas.editing():
             return
 
+        # maybe has relation to https://github.com/kuntsevichsergey/labelImg/issues/10
         item = self.currentItem()
         if not item: # If not selected Item, take the first one
             item = self.labelList.item(self.labelList.count()-1)
@@ -643,6 +650,37 @@ class MainWindow(QMainWindow, WindowMixin):
                 self.canvas.setShapeVisible(shape, item.checkState() == Qt.Checked)
         except:
             pass
+
+
+    def btnstate_trunc(self, item=None):
+        """ Function to handle truncated examples
+        Update on each object """
+        if not self.canvas.editing():
+            return
+
+	# maybe has relation to https://github.com/kuntsevichsergey/labelImg/issues/10
+        item = self.currentItem()
+        if not item:  # If not selected Item, take the first one
+            item = self.labelList.item(self.labelList.count() - 1)
+
+        truncated = self.truncButton.isChecked()
+
+        try:
+            shape = self.itemsToShapes[item]
+        except:
+            pass
+        # Checked and Update
+        try:
+            if truncated != shape.truncated:
+                shape.truncated = truncated
+                self.setDirty()
+            else:  # User probably changed item visibility
+                self.canvas.setShapeVisible(shape, item.checkState() == Qt.Checked)
+        except:
+            pass
+
+
+
 
     # React to canvas signals.
     def shapeSelectionChanged(self, selected=False):
@@ -682,11 +720,12 @@ class MainWindow(QMainWindow, WindowMixin):
 
     def loadLabels(self, shapes):
         s = []
-        for label, points, line_color, fill_color, difficult in shapes:
+        for label, points, line_color, fill_color, difficult, truncated in shapes:
             shape = Shape(label=label)
             for x, y in points:
                 shape.addPoint(QPointF(x, y))
             shape.difficult = difficult
+            shape.truncated = truncated
             shape.close()
             s.append(shape)
 
@@ -716,7 +755,8 @@ class MainWindow(QMainWindow, WindowMixin):
                         fill_color=s.fill_color.getRgb(),
                         points=[(p.x(), p.y()) for p in s.points],
                        # add chris
-                        difficult = s.difficult)
+                        difficult = s.difficult,
+                        truncated = s.truncated)
 
         shapes = [format_shape(shape) for shape in self.canvas.shapes]
         # Can add differrent annotation formats here
@@ -746,6 +786,7 @@ class MainWindow(QMainWindow, WindowMixin):
             shape = self.itemsToShapes[item]
             # Add Chris
             self.diffcButton.setChecked(shape.difficult)
+            self.truncButton.setChecked(shape.truncated)
 
     def labelItemChanged(self, item):
         shape = self.itemsToShapes[item]
@@ -778,6 +819,7 @@ class MainWindow(QMainWindow, WindowMixin):
 
         # Add Chris
         self.diffcButton.setChecked(False)
+        self.truncButton.setChecked(False)
         if text is not None:
             self.prevLabelText = text
             generate_color = generateColorByText(text)
